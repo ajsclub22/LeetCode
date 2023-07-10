@@ -36,37 +36,25 @@ class Solution {
     // Function to detect cycle in an undirected graph.
     public boolean isCycle(int V, ArrayList<ArrayList<Integer>> adj) {
         // Code here
-        boolean[] vis=new boolean[adj.size()];
-        for(int i=0;i<adj.size();i++){
-            if(!vis[i])
-                if(bfs(i,-1,vis,adj))
-                   return true;
-        }
-        return false;
-    }
-    boolean bfs(int s,int p,boolean[] vis,ArrayList<ArrayList<Integer>> adj){
-        vis[s]=true;
-        Queue<Pair> q=new LinkedList<>();
-        q.add(new Pair(s,p));
-        while(!q.isEmpty()){
-            int u=q.peek().st;
-            int v=q.poll().end;
-            for(int x:adj.get(u)){
-                if(!vis[x]){
-                   q.add(new Pair(x,u));
-                   vis[x]=true;
-                }
-                else if(x!=v)
+        boolean[] vis=new boolean[V];
+        for(int i=0;i<V;i++){
+            if(!vis[i]){
+                if(dfs(i,-1,vis,adj))
                    return true;
             }
         }
         return false;
     }
-}
-class Pair{
-    int st,end;
-    Pair(int s,int e){
-        st=s;
-        end=e;
+    boolean dfs(int s,int p,boolean[] vis,ArrayList<ArrayList<Integer>> adj){
+        vis[s]=true;
+        for(int x:adj.get(s)){
+            if(!vis[x]){
+                if(dfs(x,s,vis,adj))
+                   return true;
+            }
+            else if(x!=p)
+               return true;
+        }
+        return false;
     }
 }
